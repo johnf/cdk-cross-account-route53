@@ -4,7 +4,7 @@ import { Credentials, Route53, STS } from 'aws-sdk';
 interface ResourceProperties {
   AssumeRoleArn: string;
   HostedZoneId: string;
-  ResourceRecordSets: Route53.ResourceRecordSet[];
+  ResourceRecordSets: string;
 }
 
 export async function handler(event: any /* : AWSLambda.CloudFormationCustomResourceEvent */) {
@@ -28,7 +28,8 @@ async function cfnEventHandler(props: ResourceProperties, isDeleteEvent: boolean
   const credentials = await getCrossAccountCredentials(AssumeRoleArn);
   const route53 = new Route53({ credentials });
 
-  const Changes = props.ResourceRecordSets.map((set) => ({
+  const recordSets = JSON.parse(props.ResourceRecordSets) as Route53.ResourceRecordSet[];
+  const Changes = recordSets.map((set) => ({
     Action: isDeleteEvent ? 'DELETE' : 'UPSERT',
     ResourceRecordSet: set,
   }));

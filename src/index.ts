@@ -120,7 +120,7 @@ export class CrossAccountRoute53RecordSet extends Construct {
       properties: {
         AssumeRoleArn: delegationRoleArn,
         HostedZoneId: props.hostedZoneId,
-        ResourceRecordSets: props.resourceRecordSets,
+        ResourceRecordSets: JSON.stringify(props.resourceRecordSets),
       },
     });
 
