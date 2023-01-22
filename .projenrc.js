@@ -18,5 +18,9 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'records',
   ],
   devDeps: ['aws-sdk'],
+  python: {
+    distName: 'cdk-cross-account-route53',
+    module: 'cdk_cross_account_route53',
+  },
 });
 project.synth();
