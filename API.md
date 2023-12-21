@@ -9,7 +9,7 @@ These constructs allow you to create Route53 records where the zone exists in a 
 ## Getting started
 
 ```shell
-yarn add cdk-cross-account-route53
+yarn add @fallobst22/cdk-cross-account-route53
 ```
 
 First create the role in the stack for the AWS account which contains the hosted zone.
@@ -24,7 +24,7 @@ new CrossAccountRoute53Role(this, 'WebRoute53Role', {
   roleName: 'WebRoute53Role',
   assumedBy: new iam.AccountPrincipal('22222222'), // Web Stack Account
   zone,
-  records: [{ domainNames: 'www.example.com' }],
+  records: [{ domains: ['www.example.com'] }],
  });
 ```
 

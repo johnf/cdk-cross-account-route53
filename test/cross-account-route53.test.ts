@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Capture, Template } from 'aws-cdk-lib/assertions';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as route53 from 'aws-cdk-lib/aws-route53';
-import { CrossAccountRoute53Role, CrossAccountRoute53RoleProps } from '../lib/index';
+import { CrossAccountRoute53Role, CrossAccountRoute53RoleProps } from '../lib';
 
 test('Role Created (defaults)', () => {
   const app = new cdk.App();
@@ -13,7 +13,7 @@ test('Role Created (defaults)', () => {
     assumedBy: new iam.AccountPrincipal('123456789012'),
     zone: new route53.HostedZone(stack, 'HostedZone', { zoneName: 'inodes.org' }),
     records: [
-      { domainNames: 'test.inodes.org' },
+      { domains: ['test.inodes.org'] },
     ],
   };
 
@@ -40,8 +40,7 @@ test('Role Created (defaults)', () => {
   expect(condition).toBeDefined();
 
   expect(condition['ForAllValues:StringEquals']['route53:ChangeResourceRecordSetsRecordTypes']).toEqual(['A', 'AAAA']);
-  expect(condition['ForAllValues:StringEquals']['route53:ChangeResourceRecordSetsActions']).toEqual(['CREATE', 'UPSERT', 'DELETE']);
-  expect(condition['ForAllValues:StringEquals']['route53:ChangeResourceRecordSetsNormalizedRecordNames']).toEqual(['test.inodes.org']);
+  expect(condition['ForAllValues:StringLike']['route53:ChangeResourceRecordSetsNormalizedRecordNames']).toEqual(['test.inodes.org']);
 });
 
 test('Role Created (custom)', () => {
@@ -53,7 +52,7 @@ test('Role Created (custom)', () => {
     assumedBy: new iam.AccountPrincipal('123456789012'),
     zone: new route53.HostedZone(stack, 'HostedZone', { zoneName: 'inodes.org' }),
     records: [
-      { domainNames: 'test%.inodes.org.', types: ['TXT'], actions: ['UPSERT'] },
+      { domains: ['test%.inodes.org.'], types: ['TXT'] },
     ],
   };
 
@@ -80,6 +79,5 @@ test('Role Created (custom)', () => {
   expect(condition).toBeDefined();
 
   expect(condition['ForAllValues:StringEquals']['route53:ChangeResourceRecordSetsRecordTypes']).toEqual(['TXT']);
-  expect(condition['ForAllValues:StringEquals']['route53:ChangeResourceRecordSetsActions']).toEqual(['UPSERT']);
-  expect(condition['ForAllValues:StringEquals']['route53:ChangeResourceRecordSetsNormalizedRecordNames']).toEqual(['test\\045.inodes.org']);
+  expect(condition['ForAllValues:StringLike']['route53:ChangeResourceRecordSetsNormalizedRecordNames']).toEqual(['test\\045.inodes.org']);
 });
