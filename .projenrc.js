@@ -1,12 +1,12 @@
 const { awscdk } = require('projen');
 const project = new awscdk.AwsCdkConstructLibrary({
-  author: 'John Ferlito',
-  authorAddress: 'johnf@inodes.org',
-  cdkVersion: '2.58.0',
+  author: 'Sven Kirschbaum',
+  authorAddress: 'sven@kirschbaum.me',
   defaultReleaseBranch: 'main',
-  name: 'cdk-cross-account-route53',
+  name: '@fallobst22/cdk-cross-account-route53',
   description: 'CDK Construct to allow creation of Route 53 records in a different account',
-  repositoryUrl: 'https://github.com/johnf/cdk-cross-account-route53.git',
+  repositoryUrl: 'https://github.com/SvenKirschbaum/cdk-cross-account-route53',
+  cdkVersion: 'v2.82.0',
   keywords: [
     'aws',
     'aws-cdk',
@@ -18,9 +18,5 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'records',
   ],
   devDeps: ['aws-sdk'],
-  python: {
-    distName: 'cdk-cross-account-route53',
-    module: 'cdk_cross_account_route53',
-  },
 });
 project.synth();
