@@ -20,6 +20,7 @@ export interface CrossAccountRoute53RoleProps {
   readonly assumedBy: iam.IPrincipal;
   readonly zone: route53.IHostedZone;
   readonly records: CrossAccountRoute53RolePropsRecord[];
+  readonly normaliseDomains?: boolean;
 }
 
 export class CrossAccountRoute53Role extends Construct {
@@ -27,6 +28,7 @@ export class CrossAccountRoute53Role extends Construct {
     super(scope, id);
 
     const { roleName, assumedBy, zone, records } = props;
+    const normaliseDomains = props.normaliseDomains ?? true;
 
     const statements = records.map((record) => {
       const domainNames = Array.isArray(record.domainNames) ? record.domainNames : [record.domainNames];
@@ -38,7 +40,9 @@ export class CrossAccountRoute53Role extends Construct {
           'ForAllValues:StringEquals': {
             'route53:ChangeResourceRecordSetsRecordTypes': record.types || ['A', 'AAAA'],
             'route53:ChangeResourceRecordSetsActions': record.actions || ['CREATE', 'UPSERT', 'DELETE'],
-            'route53:ChangeResourceRecordSetsNormalizedRecordNames': domainNames.map((domainName) => this.normaliseDomainName(domainName)),
+          },
+          'ForAllValues:StringLike': {
+            'route53:ChangeResourceRecordSetsNormalizedRecordNames': normaliseDomains ? domainNames.map((domainName) => this.normaliseDomainName(domainName)) : domainNames,
           },
         },
       });
@@ -73,7 +77,7 @@ export class CrossAccountRoute53Role extends Construct {
           return char;
         }
 
-        const octal = '000' + char.charCodeAt(0).toString(8);
+        const octal = `000${char.charCodeAt(0).toString(8)}`;
         return `\\${octal.substring(octal.length - 3)}`;
       })
       .join('');

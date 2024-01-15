@@ -3,6 +3,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   author: 'John Ferlito',
   authorAddress: 'johnf@inodes.org',
   cdkVersion: '2.82.0',
+  majorVersion: 1,
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.0.0',
   name: 'cdk-cross-account-route53',

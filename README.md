@@ -53,6 +53,18 @@ new CrossAccountRoute53RecordSet(this, 'ARecord', {
 });
 ```
 
+If you want to use wildcard matching on domains you can choose to not autonormalise the domains and pass in a wildcard e.g.
+
+```typescript
+new CrossAccountRoute53Role(this, 'WebRoute53Role', {
+  roleName: 'WebRoute53Role',
+  assumedBy: new iam.AccountPrincipal('22222222'), // Web Stack Account
+  zone,
+  records: [{ domainNames: '*.example.com' }],
+  normaliseDomains: false,
+ });
+```
+
 ## CrossAccountRoute53Role
 
 ### Initializer
@@ -68,12 +80,13 @@ new CrossAccountRoute53Role(scope: Construct, id: string, props: CrossAccountRou
 
 ### Construct Props
 
-| Name        | Type                                   | Description |
-| ----        | ----                                   | ----------- |
-| roleName    | `string`                               | The role name |
-| assumedBy   | `iam.IPrincipal`                       | The principals that are allowed to assume the role |
-| zone        | `route53.IHostedZone`                  | The hosted zone. |
-| records     | `CrossAccountRoute53RolePropsRecord[]` | The records that can be created by this role |
+| Name             | Type                                   | Description |
+| ----             | ----                                   | ----------- |
+| roleName         | `string`                               | The role name |
+| assumedBy        | `iam.IPrincipal`                       | The principals that are allowed to assume the role |
+| zone             | `route53.IHostedZone`                  | The hosted zone. |
+| records          | `CrossAccountRoute53RolePropsRecord[]` | The records that can be created by this role |
+| normaliseDomains | `boolean`                              | Normalise the domains names as per AWS documentation (default: true) |
 
 ### CrossAccountRoute53RolePropsRecords
 
