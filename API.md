@@ -281,6 +281,7 @@ const crossAccountRoute53RoleProps: CrossAccountRoute53RoleProps = { ... }
 | <code><a href="#cdk-cross-account-route53.CrossAccountRoute53RoleProps.property.records">records</a></code> | <code><a href="#cdk-cross-account-route53.CrossAccountRoute53RolePropsRecord">CrossAccountRoute53RolePropsRecord</a>[]</code> | *No description.* |
 | <code><a href="#cdk-cross-account-route53.CrossAccountRoute53RoleProps.property.roleName">roleName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#cdk-cross-account-route53.CrossAccountRoute53RoleProps.property.zone">zone</a></code> | <code>aws-cdk-lib.aws_route53.IHostedZone</code> | *No description.* |
+| <code><a href="#cdk-cross-account-route53.CrossAccountRoute53RoleProps.property.normaliseDomains">normaliseDomains</a></code> | <code>boolean</code> | *No description.* |
 
 ---
 
@@ -321,6 +322,16 @@ public readonly zone: IHostedZone;
 ```
 
 - *Type:* aws-cdk-lib.aws_route53.IHostedZone
+
+---
+
+##### `normaliseDomains`<sup>Optional</sup> <a name="normaliseDomains" id="cdk-cross-account-route53.CrossAccountRoute53RoleProps.property.normaliseDomains"></a>
+
+```typescript
+public readonly normaliseDomains: boolean;
+```
+
+- *Type:* boolean
 
 ---
 
