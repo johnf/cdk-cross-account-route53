@@ -20,7 +20,12 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'role',
     'records',
   ],
-  devDeps: ['aws-sdk'],
+  devDeps: [
+    '@aws-sdk/client-route-53',
+    '@aws-sdk/client-sts',
+    '@aws-sdk/credential-providers',
+    '@types/aws-lambda',
+  ],
   python: {
     distName: 'cdk-cross-account-route53',
     module: 'cdk_cross_account_route53',

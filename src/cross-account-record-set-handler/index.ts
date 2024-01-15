@@ -1,5 +1,6 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Credentials, Route53, STS } from 'aws-sdk';
+import { Route53Client, ChangeResourceRecordSetsCommand, type ResourceRecordSet, ChangeAction } from '@aws-sdk/client-route-53'; // eslint-disable-line import/no-extraneous-dependencies
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers'; // eslint-disable-line import/no-extraneous-dependencies
+import type { CloudFormationCustomResourceEvent } from 'aws-lambda';
 
 interface ResourceProperties {
   AssumeRoleArn: string;
@@ -7,7 +8,7 @@ interface ResourceProperties {
   ResourceRecordSets: string;
 }
 
-export async function handler(event: any /* : AWSLambda.CloudFormationCustomResourceEvent */) {
+export async function handler(event: CloudFormationCustomResourceEvent) {
   const resourceProps = event.ResourceProperties as unknown as ResourceProperties;
 
   switch (event.RequestType) {
@@ -25,41 +26,27 @@ async function cfnEventHandler(props: ResourceProperties, isDeleteEvent: boolean
     HostedZoneId,
   } = props;
 
-  const credentials = await getCrossAccountCredentials(AssumeRoleArn);
-  const route53 = new Route53({ credentials });
+  const credentials = fromTemporaryCredentials({
+    params: {
+      RoleArn: AssumeRoleArn,
+      RoleSessionName: `cross-account-record-set-${Date.now()}`,
+    },
+  });
 
-  const recordSets = JSON.parse(props.ResourceRecordSets) as Route53.ResourceRecordSet[];
+  const route53Client = new Route53Client({ credentials });
+
+  const recordSets = JSON.parse(props.ResourceRecordSets) as ResourceRecordSet[];
   const Changes = recordSets.map((set) => ({
-    Action: isDeleteEvent ? 'DELETE' : 'UPSERT',
+    Action: isDeleteEvent ? ChangeAction.DELETE : ChangeAction.UPSERT,
     ResourceRecordSet: set,
   }));
 
-  await route53.changeResourceRecordSets({
+  const command = new ChangeResourceRecordSetsCommand({
     HostedZoneId,
     ChangeBatch: {
       Changes,
     },
-  }).promise();
-}
-
-async function getCrossAccountCredentials(roleArn: string): Promise<Credentials> {
-  const sts = new STS();
-  const timestamp = (new Date()).getTime();
-
-  const { Credentials: assumedCredentials } = await sts
-    .assumeRole({
-      RoleArn: roleArn,
-      RoleSessionName: `cross-account-record-set-${timestamp}`,
-    })
-    .promise();
-
-  if (!assumedCredentials) {
-    throw Error('Error getting assume role credentials');
-  }
-
-  return new Credentials({
-    accessKeyId: assumedCredentials.AccessKeyId,
-    secretAccessKey: assumedCredentials.SecretAccessKey,
-    sessionToken: assumedCredentials.SessionToken,
   });
+
+  await route53Client.send(command);
 }
