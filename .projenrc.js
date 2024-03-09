@@ -1,4 +1,8 @@
-const { awscdk } = require('projen');
+const {
+  awscdk,
+  javascript,
+} = require('projen');
+
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Sven Kirschbaum',
   authorAddress: 'sven@kirschbaum.me',
@@ -24,5 +28,16 @@ const project = new awscdk.AwsCdkConstructLibrary({
     '@aws-sdk/credential-providers',
     '@types/aws-lambda',
   ],
+  autoApproveUpgrades: true,
+  autoMerge: true,
+  autoMergeOptions: {},
+  autoApproveOptions: {
+    allowedUsernames: ['SvenKirschbaum'],
+  },
+  depsUpgradeOptions: {
+    workflowOptions: {
+      schedule: javascript.UpgradeDependenciesSchedule.expressions(['0 0 * * 0']),
+    },
+  },
 });
 project.synth();
