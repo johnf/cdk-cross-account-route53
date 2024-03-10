@@ -2,6 +2,7 @@ const {
   awscdk,
   JsonPatch,
 } = require('projen');
+const { ReleaseTrigger } = require('projen/lib/release');
 
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Sven Kirschbaum',
@@ -40,6 +41,9 @@ const project = new awscdk.AwsCdkConstructLibrary({
   githubOptions: {
     mergify: false,
   },
+  releaseTrigger: ReleaseTrigger.scheduled({
+    schedule: '15 20 * * 0',
+  }),
 });
 // Remove default options defined via parent template
 project.tryFindObjectFile('renovate.json5').patch(
