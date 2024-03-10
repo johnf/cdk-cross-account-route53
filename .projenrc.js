@@ -1,6 +1,6 @@
 const {
   awscdk,
-  javascript,
+  JsonPatch,
 } = require('projen');
 
 const project = new awscdk.AwsCdkConstructLibrary({
@@ -28,16 +28,23 @@ const project = new awscdk.AwsCdkConstructLibrary({
     '@aws-sdk/credential-providers',
     '@types/aws-lambda',
   ],
-  autoApproveUpgrades: true,
-  autoMerge: true,
-  autoMergeOptions: {},
-  autoApproveOptions: {
-    allowedUsernames: ['SvenKirschbaum'],
-  },
-  depsUpgradeOptions: {
-    workflowOptions: {
-      schedule: javascript.UpgradeDependenciesSchedule.expressions(['0 0 * * 0']),
+  renovatebot: true,
+  renovatebotOptions: {
+    overrideConfig: {
+      extends: [
+        'github>SvenKirschbaum/renovate-config',
+      ],
     },
   },
+  depsUpgrade: false,
+  githubOptions: {
+    mergify: false,
+  },
 });
+// Remove default options defined via parent template
+project.tryFindObjectFile('renovate.json5').patch(
+  JsonPatch.remove('/packageRules'),
+  JsonPatch.remove('/schedule'),
+);
+// project.tryFindObjectFile('.mergify.yml').patch();
 project.synth();
