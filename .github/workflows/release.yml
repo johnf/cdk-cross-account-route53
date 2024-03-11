@@ -3,7 +3,7 @@
 name: release
 on:
   schedule:
-    - cron: 15 20 * * 0
+    - cron: 15 20 * * 6
   workflow_dispatch: {}
 jobs:
   release:

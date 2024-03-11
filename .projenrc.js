@@ -42,7 +42,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     mergify: false,
   },
   releaseTrigger: ReleaseTrigger.scheduled({
-    schedule: '15 20 * * 0',
+    schedule: '15 20 * * 6',
   }),
 });
 // Remove default options defined via parent template
