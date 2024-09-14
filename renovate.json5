@@ -16,5 +16,8 @@
     "aws-cdk-lib",
     "constructs",
     "projen"
-  ]
+  ],
+  "github-actions": {
+    "enabled": false
+  }
 }

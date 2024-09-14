@@ -32,9 +32,12 @@ const project = new awscdk.AwsCdkConstructLibrary({
   renovatebot: true,
   renovatebotOptions: {
     overrideConfig: {
-      extends: [
+      'extends': [
         'github>SvenKirschbaum/renovate-config',
       ],
+      'github-actions': {
+        enabled: false,
+      },
     },
   },
   depsUpgrade: false,
