@@ -84,13 +84,13 @@ function buildDelegationStatements(props: DelegationConfig) {
   });
 
   statements.push(new iam.PolicyStatement({
-    actions: ['route53:ListHostedZonesByName', 'route53:ListResourceRecordSets'],
+    actions: ['route53:ListResourceRecordSets'],
     resources: [props.zone.hostedZoneArn],
   }));
 
   // Can we be more specific here?
   statements.push(new iam.PolicyStatement({
-    actions: ['route53:GetChange', 'route53:ListHostedZones'],
+    actions: ['route53:GetChange', 'route53:ListHostedZones', 'route53:ListHostedZonesByName'],
     resources: ['*'],
   }));
 
