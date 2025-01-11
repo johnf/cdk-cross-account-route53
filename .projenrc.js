@@ -47,6 +47,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   releaseTrigger: ReleaseTrigger.scheduled({
     schedule: '15 20 * * 6',
   }),
+  workflowNodeVersion: '20.x',
 });
 // Remove default options defined via parent template
 project.tryFindObjectFile('renovate.json5').patch(
