@@ -107,7 +107,7 @@ export class CrossAccountRoute53RecordSet extends Construct {
 
     const provider = CustomResourceProvider.getOrCreateProvider(this, customResourceType, {
       codeDirectory: path.join(__dirname, 'cross-account-record-set-handler'),
-      runtime: CustomResourceProviderRuntime.NODEJS_18_X,
+      runtime: CustomResourceProviderRuntime.NODEJS_20_X,
     });
 
     const role = iam.Role.fromRoleArn(this, 'cross-account-record-set-handler-role', provider.roleArn);
