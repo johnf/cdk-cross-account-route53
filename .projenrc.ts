@@ -2,7 +2,7 @@ import { awscdk, javascript } from 'projen';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'John Ferlito',
   authorAddress: 'johnf@inodes.org',
-  cdkVersion: '2.82.0',
+  cdkVersion: '2.146.0',
   majorVersion: 1,
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.8.0',
