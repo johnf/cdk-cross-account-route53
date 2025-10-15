@@ -49,6 +49,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     schedule: '15 20 * * 6',
   }),
   workflowNodeVersion: '24.x',
+  npmTrustedPublishing: true,
 });
 
 new javascript.UpgradeDependencies(project, {
