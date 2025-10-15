@@ -48,4 +48,5 @@ junit.xml
 .jsii
 tsconfig.json
 !/API.md
+!/.github/workflows/upgrade-projen-main.yml
 !/.projenrc.js
