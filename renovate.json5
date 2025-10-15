@@ -4,7 +4,7 @@
     "github>SvenKirschbaum/renovate-config"
   ],
   "ignoreDeps": [
-    "@types/node",
+    "@stylistic/eslint-plugin",
     "@typescript-eslint/eslint-plugin",
     "@typescript-eslint/parser",
     "commit-and-tag-version",
@@ -15,7 +15,13 @@
     "jsii",
     "aws-cdk-lib",
     "constructs",
-    "projen"
+    "projen",
+    "actions/checkout",
+    "actions/download-artifact",
+    "amannn/action-semantic-pull-request",
+    "actions/setup-node",
+    "actions/upload-artifact",
+    "peter-evans/create-pull-request"
   ],
   "github-actions": {
     "enabled": false
