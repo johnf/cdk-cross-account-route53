@@ -219,7 +219,7 @@ const crossAccountRoute53RecordSetProps: CrossAccountRoute53RecordSetProps = { .
 | <code><a href="#cdk-cross-account-route53.CrossAccountRoute53RecordSetProps.property.delegationRoleAccount">delegationRoleAccount</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#cdk-cross-account-route53.CrossAccountRoute53RecordSetProps.property.delegationRoleName">delegationRoleName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#cdk-cross-account-route53.CrossAccountRoute53RecordSetProps.property.hostedZoneId">hostedZoneId</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-cross-account-route53.CrossAccountRoute53RecordSetProps.property.resourceRecordSets">resourceRecordSets</a></code> | <code>any</code> | *No description.* |
+| <code><a href="#cdk-cross-account-route53.CrossAccountRoute53RecordSetProps.property.resourceRecordSets">resourceRecordSets</a></code> | <code>object[]</code> | *No description.* |
 
 ---
 
@@ -256,10 +256,10 @@ public readonly hostedZoneId: string;
 ##### `resourceRecordSets`<sup>Required</sup> <a name="resourceRecordSets" id="cdk-cross-account-route53.CrossAccountRoute53RecordSetProps.property.resourceRecordSets"></a>
 
 ```typescript
-public readonly resourceRecordSets: any;
+public readonly resourceRecordSets: object[];
 ```
 
-- *Type:* any
+- *Type:* object[]
 
 ---
 

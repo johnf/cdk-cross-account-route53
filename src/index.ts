@@ -1,5 +1,4 @@
 import * as path from 'node:path';
-import type { ResourceRecordSet } from '@aws-sdk/client-route-53';
 import { CustomResource, CustomResourceProvider, CustomResourceProviderRuntime, Stack } from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import type * as route53 from 'aws-cdk-lib/aws-route53';
@@ -93,7 +92,7 @@ export interface CrossAccountRoute53RecordSetProps {
   readonly delegationRoleName: string;
   readonly delegationRoleAccount: string;
   readonly hostedZoneId: string;
-  readonly resourceRecordSets: ResourceRecordSet[];
+  readonly resourceRecordSets: object[];
 }
 
 export class CrossAccountRoute53RecordSet extends Construct {
