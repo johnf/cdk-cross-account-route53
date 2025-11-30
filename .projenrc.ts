@@ -8,10 +8,9 @@ const project = new awscdk.AwsCdkConstructLibrary({
   repositoryUrl: 'https://github.com/johnf/cdk-cross-account-route53.git',
   keywords: ['aws', 'aws-cdk', 'awscdk', 'cdk', 'route53', 'cross-account', 'role', 'records'],
 
-  cdkVersion: '2.146.0',
+  cdkVersion: '2.197.0',
   majorVersion: 1,
   defaultReleaseBranch: 'main',
-  jsiiVersion: '~5.8.0',
   projenrcTs: true,
   devDeps: ['@aws-sdk/client-route-53', '@aws-sdk/client-sts', '@aws-sdk/credential-providers', '@types/aws-lambda'],
 

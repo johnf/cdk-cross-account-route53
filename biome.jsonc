@@ -48,5 +48,5 @@
     "enabled": true,
     "useIgnoreFile": true
   },
-  "$schema": "https://biomejs.dev/schemas/latest/schema.json"
+  "$schema": "node_modules/.pnpm/@biomejs+biome@2.3.8/node_modules/@biomejs/biome/configuration_schema.json"
 }
