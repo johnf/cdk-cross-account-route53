@@ -2,7 +2,14 @@ import * as cdk from 'aws-cdk-lib';
 import { Capture, Template } from 'aws-cdk-lib/assertions';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as route53 from 'aws-cdk-lib/aws-route53';
-import { CrossAccountRoute53Role, CrossAccountRoute53RoleProps } from '../lib/index';
+import { CrossAccountRoute53Role, type CrossAccountRoute53RoleProps } from '../lib/index';
+
+interface PolicyStatementJson {
+  Effect: 'Allow' | 'Deny';
+  Action?: string | string[];
+  Resource?: string | string[];
+  Condition?: Record<string, Record<string, string | string[]>>;
+}
 
 test('Role Created (defaults)', () => {
   const app = new cdk.App();
@@ -12,9 +19,7 @@ test('Role Created (defaults)', () => {
     roleName: 'TestRole',
     assumedBy: new iam.AccountPrincipal('123456789012'),
     zone: new route53.HostedZone(stack, 'HostedZone', { zoneName: 'inodes.org' }),
-    records: [
-      { domainNames: 'test.inodes.org' },
-    ],
+    records: [{ domainNames: 'test.inodes.org' }],
   };
 
   new CrossAccountRoute53Role(stack, 'MyTestConstruct', props);
@@ -33,7 +38,7 @@ test('Role Created (defaults)', () => {
   const policy = policies.asArray()[0];
   const statements = policy.PolicyDocument.Statement;
 
-  const recordStatement = statements.find((statement: any) => statement.Action === 'route53:ChangeResourceRecordSets');
+  const recordStatement = statements.find((statement: PolicyStatementJson) => statement.Action === 'route53:ChangeResourceRecordSets');
 
   expect(recordStatement).toBeDefined();
   const condition = recordStatement.Condition;
@@ -52,9 +57,7 @@ test('Role Created (custom)', () => {
     roleName: 'TestRole',
     assumedBy: new iam.AccountPrincipal('123456789012'),
     zone: new route53.HostedZone(stack, 'HostedZone', { zoneName: 'inodes.org' }),
-    records: [
-      { domainNames: 'test%.inodes.org.', types: ['TXT'], actions: ['UPSERT'] },
-    ],
+    records: [{ domainNames: 'test%.inodes.org.', types: ['TXT'], actions: ['UPSERT'] }],
   };
 
   new CrossAccountRoute53Role(stack, 'MyTestConstruct', props);
@@ -73,7 +76,7 @@ test('Role Created (custom)', () => {
   const policy = policies.asArray()[0];
   const statements = policy.PolicyDocument.Statement;
 
-  const recordStatement = statements.find((statement: any) => statement.Action === 'route53:ChangeResourceRecordSets');
+  const recordStatement = statements.find((statement: PolicyStatementJson) => statement.Action === 'route53:ChangeResourceRecordSets');
 
   expect(recordStatement).toBeDefined();
   const condition = recordStatement.Condition;
@@ -92,9 +95,7 @@ test('Role Created (not normalised)', () => {
     roleName: 'TestRole',
     assumedBy: new iam.AccountPrincipal('123456789012'),
     zone: new route53.HostedZone(stack, 'HostedZone', { zoneName: 'inodes.org' }),
-    records: [
-      { domainNames: '*.inodes.org' },
-    ],
+    records: [{ domainNames: '*.inodes.org' }],
     normaliseDomains: false,
   };
 
@@ -114,7 +115,7 @@ test('Role Created (not normalised)', () => {
   const policy = policies.asArray()[0];
   const statements = policy.PolicyDocument.Statement;
 
-  const recordStatement = statements.find((statement: any) => statement.Action === 'route53:ChangeResourceRecordSets');
+  const recordStatement = statements.find((statement: PolicyStatementJson) => statement.Action === 'route53:ChangeResourceRecordSets');
 
   expect(recordStatement).toBeDefined();
   const condition = recordStatement.Condition;

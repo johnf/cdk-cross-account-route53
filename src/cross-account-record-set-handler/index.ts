@@ -1,4 +1,4 @@
-import { Route53Client, ChangeResourceRecordSetsCommand, type ResourceRecordSet, ChangeAction } from '@aws-sdk/client-route-53'; // eslint-disable-line import/no-extraneous-dependencies
+import { ChangeAction, ChangeResourceRecordSetsCommand, type ResourceRecordSet, Route53Client } from '@aws-sdk/client-route-53'; // eslint-disable-line import/no-extraneous-dependencies
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers'; // eslint-disable-line import/no-extraneous-dependencies
 import type { CloudFormationCustomResourceEvent } from 'aws-lambda';
 
@@ -21,10 +21,7 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
 }
 
 async function cfnEventHandler(props: ResourceProperties, isDeleteEvent: boolean) {
-  const {
-    AssumeRoleArn,
-    HostedZoneId,
-  } = props;
+  const { AssumeRoleArn, HostedZoneId } = props;
 
   const credentials = fromTemporaryCredentials({
     params: {

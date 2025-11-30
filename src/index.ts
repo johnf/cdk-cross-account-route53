@@ -1,11 +1,9 @@
-import * as path from 'path';
-
+import * as path from 'node:path';
+import type { ResourceRecordSet } from '@aws-sdk/client-route-53';
 import { CustomResource, CustomResourceProvider, CustomResourceProviderRuntime, Stack } from 'aws-cdk-lib';
-
 import * as iam from 'aws-cdk-lib/aws-iam';
-import * as route53 from 'aws-cdk-lib/aws-route53';
+import type * as route53 from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
-// import { Route53 } from 'aws-sdk';
 
 export type CrossAccountRoute53RolePropsRecordAction = 'CREATE' | 'UPSERT' | 'DELETE';
 
@@ -42,22 +40,28 @@ export class CrossAccountRoute53Role extends Construct {
             'route53:ChangeResourceRecordSetsActions': record.actions || ['CREATE', 'UPSERT', 'DELETE'],
           },
           'ForAllValues:StringLike': {
-            'route53:ChangeResourceRecordSetsNormalizedRecordNames': normaliseDomains ? domainNames.map((domainName) => this.normaliseDomainName(domainName)) : domainNames,
+            'route53:ChangeResourceRecordSetsNormalizedRecordNames': normaliseDomains
+              ? domainNames.map((domainName) => this.normaliseDomainName(domainName))
+              : domainNames,
           },
         },
       });
     });
 
-    statements.push(new iam.PolicyStatement({
-      actions: ['route53:ListHostedZonesByName'],
-      resources: [zone.hostedZoneArn],
-    }));
+    statements.push(
+      new iam.PolicyStatement({
+        actions: ['route53:ListHostedZonesByName'],
+        resources: [zone.hostedZoneArn],
+      }),
+    );
 
     // Can we be more specific here?
-    statements.push(new iam.PolicyStatement({
-      actions: ['route53:GetChange'],
-      resources: ['*'],
-    }));
+    statements.push(
+      new iam.PolicyStatement({
+        actions: ['route53:GetChange'],
+        resources: ['*'],
+      }),
+    );
 
     new iam.Role(this, id, {
       roleName,
@@ -72,7 +76,8 @@ export class CrossAccountRoute53Role extends Construct {
     return domainName
       .replace(/\.$/, '')
       .toLowerCase()
-      .split('').map((char) => {
+      .split('')
+      .map((char) => {
         if (char.match(/[a-z0-9_.-]/)) {
           return char;
         }
@@ -88,7 +93,7 @@ export interface CrossAccountRoute53RecordSetProps {
   readonly delegationRoleName: string;
   readonly delegationRoleAccount: string;
   readonly hostedZoneId: string;
-  readonly resourceRecordSets: any; // Route53.ResourceRecordSet[],
+  readonly resourceRecordSets: ResourceRecordSet[];
 }
 
 export class CrossAccountRoute53RecordSet extends Construct {
@@ -112,11 +117,13 @@ export class CrossAccountRoute53RecordSet extends Construct {
 
     const role = iam.Role.fromRoleArn(this, 'cross-account-record-set-handler-role', provider.roleArn);
 
-    const addToPrinciplePolicyResult = role.addToPrincipalPolicy(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ['sts:AssumeRole'],
-      resources: [delegationRoleArn],
-    }));
+    const addToPrinciplePolicyResult = role.addToPrincipalPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['sts:AssumeRole'],
+        resources: [delegationRoleArn],
+      }),
+    );
 
     const customResource = new CustomResource(this, 'CrossAccountRecordSetCustomResource', {
       resourceType: customResourceType,
